@@ -1,6 +1,6 @@
-## ofxJoystick
+# ofxJoystick
 
-### usage
+## usage
 ```cpp
 // in header
 ofxJoystick joy_;
