@@ -1,7 +1,7 @@
 ## ofxJoystick
 
 ### usage
-```cpp:usage.cpp
+```cpp
 // in header
 ofxJoystick joy_;
 
