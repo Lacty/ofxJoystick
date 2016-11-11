@@ -24,7 +24,7 @@ private:
   void updateButton();
 
 public:
-  Joystick() = default;
+  ofxJoystick() = default;
   
   // JoyId : usually give GLFW_SOYSTICK_1
   // when you connect only one Gamepad
