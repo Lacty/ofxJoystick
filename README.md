@@ -1,3 +1,6 @@
 ## ofxJoystick
 
-### usage.
+### usage
+```cpp:usage.cpp
+int main() {}
+```
