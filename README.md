@@ -20,3 +20,10 @@ if (joy_.isPush(0))    { ofLog() << "push 0";    }
 if (joy_.isPress(0))   { ofLog() << "press 0";   }
 if (joy_.isRelease(0)) { ofLog() << "release 0"; }
 ```
+
+## contact
+**@Lost206** -twitter    
+**akira206@gmail.com** -gmail
+
+## lisence
+ofxJoystick under MIT lisence    
