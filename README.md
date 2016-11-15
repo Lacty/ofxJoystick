@@ -16,8 +16,8 @@ float XAxis = joy_.getAxis(0);
 float YAxis = joy_.getAxis(1);
 
 // and get button input
-if (joy_.isPush(0))    { ofLog() << "push 0";    }
-if (joy_.isPress(0))   { ofLog() << "press 0";   }
+if (joy_.isPressed(0)) { ofLog() << "pressed 0"; }
+if (joy_.isPushing(0)) { ofLog() << "pushing 0"; }
 if (joy_.isRelease(0)) { ofLog() << "release 0"; }
 ```
 
