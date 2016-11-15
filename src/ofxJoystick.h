@@ -13,8 +13,8 @@ private:
   int buttonNum_;
   int axisNum_;
   
-  set<int> push_;
-  set<int> press_;
+  set<int> pressed_;
+  set<int> pushing_;
   set<int> release_;
   
   vector<float> axis_;
@@ -50,7 +50,7 @@ public:
   float getAxis(int num) const;
   
   // button func
-  bool isPush(int button) const;
-  bool isPress(int button) const;
+  bool isPressed(int button) const;
+  bool isPushing(int button) const;
   bool isRelease(int button) const;
 };

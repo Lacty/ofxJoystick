@@ -13,8 +13,14 @@ void ofApp::update() {
   
   // chack all button for push
   for (int i = 0; i < joy_.getButtonNum(); i++) {
-    if (joy_.isPush(i)) {
-      ofLog() << "push :" << i;
+    if (joy_.isPressed(i)) {
+      ofLog() << "pressed :" << i;
+    }
+    if (joy_.isPushing(i)) {
+      ofLog() << "pushing :" << i;
+    }
+    if (joy_.isRelease(i)) {
+      ofLog() << "release :" << i;
     }
   }
   

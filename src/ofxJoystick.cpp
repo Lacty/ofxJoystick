@@ -15,7 +15,7 @@ void ofxJoystick::updateAxis() {
 }
   
 void ofxJoystick::updateButton() {
-  push_.clear();
+  pressed_.clear();
   release_.clear();
   
   const unsigned char* button = glfwGetJoystickButtons(id_, &buttonNum_);
@@ -23,16 +23,16 @@ void ofxJoystick::updateButton() {
   for (int i = 0; i < buttonNum_; i++) {
     switch(button[i]) {
       case GLFW_PRESS : {
-        if (press_.find(i) == press_.end()) {
-          push_.emplace(i);
+        if (pushing_.find(i) == pushing_.end()) {
+          pressed_.emplace(i);
         }
-        press_.emplace(i);
+        pushing_.emplace(i);
         break;
       }
       case GLFW_RELEASE : {
-        if (press_.find(i) != press_.end()) {
+        if (pushing_.find(i) != pushing_.end()) {
           release_.emplace(i);
-          press_.erase(press_.find(i));
+          pushing_.erase(pushing_.find(i));
         }
         break;
       }
@@ -90,15 +90,15 @@ float ofxJoystick::getAxis(int num) const {
   return axis_[num];
 }
   
-bool ofxJoystick::isPush(int button) const {
-  if (push_.find(button) == push_.end()) {
+bool ofxJoystick::isPressed(int button) const {
+  if (pressed_.find(button) == pressed_.end()) {
     return false;
   }
   return true;
 }
   
-bool ofxJoystick::isPress(int button) const {
-  if (press_.find(button) == press_.end()) {
+bool ofxJoystick::isPushing(int button) const {
+  if (pushing_.find(button) == pushing_.end()) {
     return false;
   }
   return true;
