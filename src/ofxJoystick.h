@@ -22,6 +22,8 @@ private:
   void updateState();
   void updateAxis();
   void updateButton();
+  
+  void update(ofEventArgs &args);
 
 public:
   ofxJoystick() = default;
@@ -29,9 +31,6 @@ public:
   // JoyId : usually give GLFW_SOYSTICK_1
   // when you connect only one Gamepad
   void setup(int JoyId);
-
-  // update() should call in yourApp::update()
-  void update();
 
   // if connected return true
   // disconnected return false

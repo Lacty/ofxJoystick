@@ -52,13 +52,15 @@ void ofxJoystick::setup(int JoyId) {
   name_ = glfwGetJoystickName(id_);
   glfwGetJoystickButtons(id_, &buttonNum_);
   glfwGetJoystickAxes(id_, &axisNum_);
+  
+  ofAddListener(ofEvents().update, this, &ofxJoystick::update);
 
   ofLog() << "JoyPad connected : " << name_;
   ofLog() << "Button Num : " << buttonNum_;
   ofLog() << "Axis Num : " << axisNum_ << endl;
 }
   
-void ofxJoystick::update() {
+void ofxJoystick::update(ofEventArgs &args) {
   updateState();
   updateAxis();
   updateButton();
