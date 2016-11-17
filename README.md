@@ -8,9 +8,6 @@ ofxJoystick joy_;
 // in yourApp::setup()
 joy_.setup(GLFW_JOYSTICK_1);
 
-// in yourApp::update()
-joy_.update();
-
 // now get axis from your Gamepad!
 float XAxis = joy_.getAxis(0);
 float YAxis = joy_.getAxis(1);
