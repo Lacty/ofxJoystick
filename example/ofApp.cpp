@@ -9,8 +9,6 @@ void ofApp::setup() {
 
 //--------------------------------------------------------------
 void ofApp::update() {
-  joy_.update();
-  
   // chack all button for push
   for (int i = 0; i < joy_.getButtonNum(); i++) {
     if (joy_.isPressed(i)) {
