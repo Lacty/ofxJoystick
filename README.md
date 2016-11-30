@@ -18,6 +18,9 @@ if (joy_.isPushing(0)) { ofLog() << "pushing 0"; }
 if (joy_.isRelease(0)) { ofLog() << "release 0"; }
 ```
 
+## my another ofxAddon
+[ofxKeyboard](https://github.com/Lacty/ofxKeyboard) for KeyInput in !yourApp::keyPressed
+
 ## contact
 **@Lost206** -twitter    
 **akira206@gmail.com** -gmail
