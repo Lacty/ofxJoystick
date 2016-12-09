@@ -52,4 +52,6 @@ public:
   bool isPressed(int button) const;
   bool isPushing(int button) const;
   bool isRelease(int button) const;
+  
+  bool anyButton() const;
 };
