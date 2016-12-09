@@ -112,3 +112,10 @@ bool ofxJoystick::isRelease(int button) const {
   }
   return true;
 }
+
+bool ofxJoystick::anyButton() const {
+  if (pressed_.size()) {
+    return true;
+  }
+  return false;
+}
