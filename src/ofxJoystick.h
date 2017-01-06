@@ -1,4 +1,4 @@
-
+﻿
 #pragma once
 #include "ofMain.h"
 
@@ -27,6 +27,7 @@ private:
 
 public:
   ofxJoystick() = default;
+  ~ofxJoystick();
   
   // JoyId : usually give GLFW_SOYSTICK_1
   // when you connect only one Gamepad

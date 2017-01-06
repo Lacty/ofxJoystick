@@ -1,6 +1,10 @@
-
+﻿
 #include "ofxJoystick.h"
 
+
+ofxJoystick::~ofxJoystick() {
+  ofRemoveListener(ofEvents().update, this, &ofxJoystick::update);
+}
 
 void ofxJoystick::updateState() {
   isConnect_ = (glfwJoystickPresent(id_) == GL_TRUE);
@@ -8,7 +12,7 @@ void ofxJoystick::updateState() {
     name_ = glfwGetJoystickName(id_);
   }
 }
-  
+
 void ofxJoystick::updateAxis() {
   const float* axis = glfwGetJoystickAxes(id_, &axisNum_);
   axis_ = vector<float>(&axis[0], &axis[axisNum_]);
