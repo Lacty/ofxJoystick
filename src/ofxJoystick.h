@@ -2,6 +2,8 @@
 #pragma once
 #include "ofMain.h"
 
+#include "GLFW/glfw3.h"
+
 
 class ofxJoystick {
 private:
