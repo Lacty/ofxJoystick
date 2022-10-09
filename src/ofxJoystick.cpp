@@ -62,6 +62,10 @@ void ofxJoystick::setup(int JoyId) {
   ofLog() << "JoyPad connected : " << name_;
   ofLog() << "Button Num : " << buttonNum_;
   ofLog() << "Axis Num : " << axisNum_ << endl;
+
+  //avoid crash when accessing data on first call to ofApp::update()
+  updateAxis();
+  updateButton();
 }
   
 void ofxJoystick::update(ofEventArgs &args) {
