@@ -134,29 +134,27 @@ void ofxJoystick::updateButton() {
 
       case GLFW_PRESS : {
         if (pushing_.find(i) == pushing_.end()) {
-          pressed_.emplace(i);
-
+          pushing_.emplace(i);
         }
+        pressed_.emplace(i);
         //std::cout << i << " Pressed!" << std::endl;
-        pushing_.emplace(i);
         break;
       }
       case GLFW_RELEASE : {
         if (pushing_.find(i) != pushing_.end()) {
-          release_.emplace(i);
-        //std::cout  << i << " Released!" << std::endl;
+          //std::cout  << i << " Released!" << std::endl;
           pushing_.erase(pushing_.find(i));
         }
+        release_.emplace(i);
         break;
       }
       	case GLFW_REPEAT:
 		{
 			if (pushing_.find(i) == pushing_.end()) {
-				pressed_.emplace(i);
+				pushing_.emplace(i);
 			}
 			 // std::cout << i << " Pressed!" << std::endl;
-			pushing_.emplace(i);
-
+      pressed_.emplace(i);
 			break;
 		}
     }
@@ -165,7 +163,7 @@ void ofxJoystick::updateButton() {
 }
 
 void ofxJoystick::setup(int JoyId) {
-  id_   = JoyId;
+  id_ = JoyId;
 
   updateState();
   if (!isConnect_) {
@@ -181,10 +179,14 @@ void ofxJoystick::setup(int JoyId) {
   //avoid crash when accessing data on first call to ofApp::update()
   updateAxis();
   updateButton();
+
+#ifdef __linux__
   axisNum_ = get_axis_count(js_);
   buttonNum_ = get_button_count(js_);
-  //glfwGetJoystickButtons(id_, &buttonNum_);
-  //glfwGetJoystickAxes(id_, &axisNum_);
+#else
+  glfwGetJoystickButtons(id_, &buttonNum_);
+  glfwGetJoystickAxes(id_, &axisNum_);
+#endif
 
   ofAddListener(ofEvents().update, this, &ofxJoystick::update);
 
