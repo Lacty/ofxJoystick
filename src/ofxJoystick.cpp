@@ -167,7 +167,7 @@ void ofxJoystick::setup(int JoyId) {
 
   updateState();
   if (!isConnect_) {
-    ofLog() << "Joypad [" << id_ << "] : disconnected";
+    //ofLog() << "Joypad [" << id_ << "] : disconnected";
     return;
   }
 
@@ -190,9 +190,9 @@ void ofxJoystick::setup(int JoyId) {
 
   ofAddListener(ofEvents().update, this, &ofxJoystick::update);
 
-  ofLog() << "JoyPad connected : " << name_;
-  ofLog() << "Button Num : " << buttonNum_;
-  ofLog() << "Axis Num : " << axisNum_ << endl;
+  //ofLog() << "JoyPad connected : " << name_;
+  //ofLog() << "Button Num : " << buttonNum_;
+  //ofLog() << "Axis Num : " << axisNum_ << endl;
 
   //avoid crash when accessing data on first call to ofApp::update()
   updateAxis();
