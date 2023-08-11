@@ -69,9 +69,12 @@ void ofxJoystick::updateState() {
   if (isConnect_ == false)
   {
     char device[255];
-
+    if (js_ != 0)
+    {
+        close(js_);
+    }
     sprintf(device,"/dev/input/js%d", id_);
-     js_ = open(device, O_NONBLOCK);
+     js_ = open(device,O_RDONLY | O_NONBLOCK);
     name_= std::string(device);
     printf("\n");
     if (js_ == -1)
@@ -83,13 +86,17 @@ void ofxJoystick::updateState() {
     struct JS_DATA_TYPE jso;
     if(read(js_, &jso, JS_RETURN))
     {
-        printf("%x", jso.buttons );
+        printf("%x\n", jso.buttons );
          for (int i=0;i<15;i++)
             if(jso.buttons & 1 << i)
              {
                 button[i] = true;
                 printf("%d Held\n",i);
             }
+    }
+    else
+    {
+
     }
   }
   #else
@@ -203,7 +210,8 @@ void ofxJoystick::update(ofEventArgs &args) {
  #ifdef __linux__
   struct js_event event;
   size_t axis;
-  while (read_event(js_, &event) == 0)
+  int res = read_event(js_, &event);
+  while ( res == 0)
     {
 
         switch (event.type)
@@ -220,7 +228,21 @@ void ofxJoystick::update(ofEventArgs &args) {
                 /* Ignore init events. */
                 break;
         }
+        res = read_event(js_, &event);
+
     }
+    if(res == -1)
+    {
+        int errsv = errno;
+        if (errsv != EAGAIN)
+        {
+            isConnect_ = false;
+            close(js_);
+            js_=0;
+
+        }
+    }
+
   #endif
   updateState();
   updateAxis();
