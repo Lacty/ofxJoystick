@@ -69,12 +69,13 @@ void ofxJoystick::updateState() {
   if (isConnect_ == false)
   {
     char device[255];
-    if (js_ != 0)
+    if (js_ != -1)
     {
         close(js_);
     }
+
     sprintf(device,"/dev/input/js%d", id_);
-     js_ = open(device,O_RDONLY | O_NONBLOCK);
+    js_ = open(device,O_RDONLY | O_NONBLOCK);
     name_= std::string(device);
     printf("\n");
     if (js_ == -1)
@@ -209,19 +210,33 @@ void ofxJoystick::setup(int JoyId) {
 void ofxJoystick::update(ofEventArgs &args) {
  #ifdef __linux__
   struct js_event event;
-  size_t axis;
+
   int res = read_event(js_, &event);
-  while ( res == 0)
+  if(res == -1)
     {
 
+        int errsv = errno;
+        if (errsv != EAGAIN)
+        {
+            std::cout << "Disconnected: " << id_ << std::endl;
+            isConnect_ = false;
+            close(js_);
+            js_=-1;
+
+        }
+    }
+  while ( res == 0)
+    {
+        printf("event Type: %d", event.type);
         switch (event.type)
         {
+
             case JS_EVENT_BUTTON:
                 printf("Button %u %s\n", event.number, event.value ? "pressed" : "released");
                 button[event.number] = event.value ? GLFW_PRESS : GLFW_RELEASE;
                 break;
             case JS_EVENT_AXIS:
-                axis = get_axis_state(&event, axes);
+                get_axis_state(&event, axes);
 
                 break;
             default:
@@ -229,19 +244,21 @@ void ofxJoystick::update(ofEventArgs &args) {
                 break;
         }
         res = read_event(js_, &event);
-
-    }
     if(res == -1)
     {
+
         int errsv = errno;
         if (errsv != EAGAIN)
         {
+            std::cout << "Disconnected: " << id_ << std::endl;
             isConnect_ = false;
             close(js_);
-            js_=0;
+            js_=-1;
 
         }
     }
+    }
+
 
   #endif
   updateState();
