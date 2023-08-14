@@ -69,9 +69,13 @@ void ofxJoystick::updateState() {
   if (isConnect_ == false)
   {
     char device[255];
+    if (js_ != -1)
+    {
+        close(js_);
+    }
 
     sprintf(device,"/dev/input/js%d", id_);
-     js_ = open(device, O_NONBLOCK);
+    js_ = open(device,O_RDONLY | O_NONBLOCK);
     name_= std::string(device);
     printf("\n");
     if (js_ == -1)
@@ -83,13 +87,17 @@ void ofxJoystick::updateState() {
     struct JS_DATA_TYPE jso;
     if(read(js_, &jso, JS_RETURN))
     {
-        printf("%x", jso.buttons );
+        printf("%x\n", jso.buttons );
          for (int i=0;i<15;i++)
             if(jso.buttons & 1 << i)
              {
                 button[i] = true;
                 printf("%d Held\n",i);
             }
+    }
+    else
+    {
+
     }
   }
   #else
@@ -134,29 +142,27 @@ void ofxJoystick::updateButton() {
 
       case GLFW_PRESS : {
         if (pushing_.find(i) == pushing_.end()) {
-          pressed_.emplace(i);
-
+          pushing_.emplace(i);
         }
+        pressed_.emplace(i);
         //std::cout << i << " Pressed!" << std::endl;
-        pushing_.emplace(i);
         break;
       }
       case GLFW_RELEASE : {
         if (pushing_.find(i) != pushing_.end()) {
-          release_.emplace(i);
-        //std::cout  << i << " Released!" << std::endl;
+          //std::cout  << i << " Released!" << std::endl;
           pushing_.erase(pushing_.find(i));
         }
+        release_.emplace(i);
         break;
       }
       	case GLFW_REPEAT:
 		{
 			if (pushing_.find(i) == pushing_.end()) {
-				pressed_.emplace(i);
+				pushing_.emplace(i);
 			}
 			 // std::cout << i << " Pressed!" << std::endl;
-			pushing_.emplace(i);
-
+      pressed_.emplace(i);
 			break;
 		}
     }
@@ -165,11 +171,11 @@ void ofxJoystick::updateButton() {
 }
 
 void ofxJoystick::setup(int JoyId) {
-  id_   = JoyId;
+  id_ = JoyId;
 
   updateState();
   if (!isConnect_) {
-    ofLog() << "Joypad [" << id_ << "] : disconnected";
+    //ofLog() << "Joypad [" << id_ << "] : disconnected";
     return;
   }
 
@@ -181,16 +187,20 @@ void ofxJoystick::setup(int JoyId) {
   //avoid crash when accessing data on first call to ofApp::update()
   updateAxis();
   updateButton();
+
+#ifdef __linux__
   axisNum_ = get_axis_count(js_);
   buttonNum_ = get_button_count(js_);
-  //glfwGetJoystickButtons(id_, &buttonNum_);
-  //glfwGetJoystickAxes(id_, &axisNum_);
+#else
+  glfwGetJoystickButtons(id_, &buttonNum_);
+  glfwGetJoystickAxes(id_, &axisNum_);
+#endif
 
   ofAddListener(ofEvents().update, this, &ofxJoystick::update);
 
-  ofLog() << "JoyPad connected : " << name_;
-  ofLog() << "Button Num : " << buttonNum_;
-  ofLog() << "Axis Num : " << axisNum_ << endl;
+  //ofLog() << "JoyPad connected : " << name_;
+  //ofLog() << "Button Num : " << buttonNum_;
+  //ofLog() << "Axis Num : " << axisNum_ << endl;
 
   //avoid crash when accessing data on first call to ofApp::update()
   updateAxis();
@@ -200,25 +210,56 @@ void ofxJoystick::setup(int JoyId) {
 void ofxJoystick::update(ofEventArgs &args) {
  #ifdef __linux__
   struct js_event event;
-  size_t axis;
-  while (read_event(js_, &event) == 0)
+
+  int res = read_event(js_, &event);
+  if(res == -1)
     {
 
+        int errsv = errno;
+        if (errsv != EAGAIN)
+        {
+            std::cout << "Disconnected: " << id_ << std::endl;
+            isConnect_ = false;
+            close(js_);
+            js_=-1;
+
+        }
+    }
+  while ( res == 0)
+    {
+        printf("event Type: %d", event.type);
         switch (event.type)
         {
+
             case JS_EVENT_BUTTON:
                 printf("Button %u %s\n", event.number, event.value ? "pressed" : "released");
                 button[event.number] = event.value ? GLFW_PRESS : GLFW_RELEASE;
                 break;
             case JS_EVENT_AXIS:
-                axis = get_axis_state(&event, axes);
+                get_axis_state(&event, axes);
 
                 break;
             default:
                 /* Ignore init events. */
                 break;
         }
+        res = read_event(js_, &event);
+    if(res == -1)
+    {
+
+        int errsv = errno;
+        if (errsv != EAGAIN)
+        {
+            std::cout << "Disconnected: " << id_ << std::endl;
+            isConnect_ = false;
+            close(js_);
+            js_=-1;
+
+        }
     }
+    }
+
+
   #endif
   updateState();
   updateAxis();

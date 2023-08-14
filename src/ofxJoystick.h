@@ -11,7 +11,7 @@ class ofxJoystick {
 private:
   bool isConnect_;
 #ifdef __linux__
-    int js_;
+    int js_{-1};
 
 
     struct axis_state axes[3] = {0};
