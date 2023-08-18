@@ -218,7 +218,7 @@ void ofxJoystick::update(ofEventArgs &args) {
         int errsv = errno;
         if (errsv != EAGAIN)
         {
-            std::cout << "Disconnected: " << id_ << std::endl;
+            //std::cout << "Disconnected: " << id_ << std::endl;
             isConnect_ = false;
             close(js_);
             js_=-1;
@@ -227,12 +227,12 @@ void ofxJoystick::update(ofEventArgs &args) {
     }
   while ( res == 0)
     {
-        printf("event Type: %d", event.type);
+        //printf("event Type: %d", event.type);
         switch (event.type)
         {
 
             case JS_EVENT_BUTTON:
-                printf("Button %u %s\n", event.number, event.value ? "pressed" : "released");
+                //printf("Button %u %s\n", event.number, event.value ? "pressed" : "released");
                 button[event.number] = event.value ? GLFW_PRESS : GLFW_RELEASE;
                 break;
             case JS_EVENT_AXIS:
@@ -250,11 +250,10 @@ void ofxJoystick::update(ofEventArgs &args) {
         int errsv = errno;
         if (errsv != EAGAIN)
         {
-            std::cout << "Disconnected: " << id_ << std::endl;
+            //std::cout << "Disconnected: " << id_ << std::endl;
             isConnect_ = false;
             close(js_);
             js_=-1;
-
         }
     }
     }
