@@ -100,7 +100,7 @@ void ofxJoystick::updateState() {
             if(jso.buttons & 1 << i)
              {
                 button[i] = true;
-                printf("%d Held\n",i);
+                printf("%d Held\n",id_);
             }
     }
     else
