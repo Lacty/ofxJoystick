@@ -91,7 +91,7 @@ void ofxJoystick::updateState() {
         if(jso.buttons == 0)
         {
           // No Bridge detected
-          printf("Port %d - Detected no Bridged Buttons", i );
+          printf("Port %d - Detected no Bridged Buttons", id_ );
           isConnect_ = false;
           close(js_);
           return;
@@ -100,7 +100,7 @@ void ofxJoystick::updateState() {
             if(jso.buttons & 1 << i)
              {
                 button[i] = true;
-                printf("%d Held\n",id_);
+                printf("%d Held\n",i);
             }
     }
     else
